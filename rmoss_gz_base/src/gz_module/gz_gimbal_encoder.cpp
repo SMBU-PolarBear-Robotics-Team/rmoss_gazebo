@@ -40,13 +40,21 @@ void IgnGimbalEncoder::gz_Joint_state_cb(const ignition::msgs::Model & msg)
   }
   rmoss_interfaces::msg::Gimbal position, velocity;
   for (int i = 0; i < msg.joint_size(); i++) {
-    if (msg.joint(i).name().find("pitch") != std::string::npos) {
-      position.pitch = msg.joint(i).axis1().position();
-      velocity.pitch = msg.joint(i).axis1().velocity();
+    if (msg.joint(i).name().find("gimbal_pitch_odom_joint") != std::string::npos) {
+      position.pitch += msg.joint(i).axis1().position();
+      velocity.pitch += msg.joint(i).axis1().velocity();
     }
-    if (msg.joint(i).name().find("yaw") != std::string::npos) {
-      position.yaw = msg.joint(i).axis1().position();
-      velocity.yaw = msg.joint(i).axis1().velocity();
+    if (msg.joint(i).name().find("gimbal_yaw_odom_joint") != std::string::npos) {
+      position.yaw += msg.joint(i).axis1().position();
+      velocity.yaw += msg.joint(i).axis1().velocity();
+    }
+    if (msg.joint(i).name().find("gimbal_pitch_joint") != std::string::npos) {
+      position.pitch += msg.joint(i).axis1().position();
+      velocity.pitch += msg.joint(i).axis1().velocity();
+    }
+    if (msg.joint(i).name().find("gimbal_yaw_joint") != std::string::npos) {
+      position.yaw += msg.joint(i).axis1().position();
+      velocity.yaw += msg.joint(i).axis1().velocity();
     }
   }
   position_sensor_->update(position, node_->get_clock()->now());
